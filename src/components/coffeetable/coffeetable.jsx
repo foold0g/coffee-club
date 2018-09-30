@@ -22,7 +22,7 @@ class CoffeeTable extends Component {
     let url = `https://hbc-frontend-challenge.hbccommon.private.hbc.com/coffee-week/users`;
     Request.get(url).then(response => {
       var hbcUsers = JSON.parse(response.text);
-      var userArray = this.createCoffeeLover(hbcUsers);
+      var userArray = this.getAllCoffeeLovers(hbcUsers);
       this.setState({
         hbcCoffeeLovers: userArray
       });
@@ -30,7 +30,7 @@ class CoffeeTable extends Component {
     });
   }
 
-  createCoffeeLover(hbcUsers) {
+  getAllCoffeeLovers(hbcUsers) {
     var userArray = this.state.hbcCoffeeLovers.slice();
     hbcUsers.users.forEach(element => {
       var user = {
