@@ -38,6 +38,10 @@ body {
   color: #3d2b1f;
 }
 
+.hbc-button:focus {
+  outline: none;
+}
+
 .hbc-cafe {
   font-family: "Jura", sans-serif;
   background-color: #bfafb2;
