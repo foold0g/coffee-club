@@ -8,16 +8,15 @@ class CoffeeTable extends Component {
       hbcCoffeeLovers: [],
       weeklyCoffeBuddies: []
     };
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick = () => {
     this.setState(state => ({
       hbcCoffeeLovers: [],
       weeklyCoffeBuddies: []
     }));
     this.componentDidMount();
-  }
+  };
 
   componentDidMount() {
     let url = `https://hbc-frontend-challenge.hbccommon.private.hbc.com/coffee-week/users`;
