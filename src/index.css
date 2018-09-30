@@ -106,6 +106,10 @@ li:nth-child(even) {
   color: white;
 }
 
+.pair-text {
+  padding-left: 100px;
+}
+
 @media screen and (max-width: 540px) {
   .hbc-header {
     font-family: "Jura", sans-serif;
@@ -179,5 +183,9 @@ li:nth-child(even) {
     padding-right: 20px;
     margin: 10px 20px;
     color: white;
+  }
+
+  .pair-text {
+    display: none;
   }
 }

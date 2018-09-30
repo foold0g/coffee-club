@@ -91,8 +91,11 @@ class CoffeeTable extends Component {
         <div className="hbc-toolbar-desktop hbc-header">
           <p className="hbc-info">
             <button className="hbc-button" onClick={this.handleClick}>
-              Get Coffee Lovers
+              Pair Coffee Lovers
             </button>
+            <span className="pair-text">
+              This week's coffee Buddy Pairs are:
+            </span>
           </p>
         </div>
         <div className="hbc-cafe">
@@ -126,7 +129,7 @@ class CoffeeTable extends Component {
         <div>
           <div className="hbc-info hbc-toolbar-mobile">
             <button className="hbc-button" onClick={this.handleClick}>
-              Get Coffee Lovers
+              Pair Coffee Lovers
             </button>
           </div>
         </div>
