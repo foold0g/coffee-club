@@ -12,7 +12,6 @@ class CoffeeTable extends Component {
   }
 
   handleClick() {
-    console.log("1");
     this.setState(state => ({
       hbcCoffeeLovers: [],
       weeklyCoffeBuddies: []
@@ -35,29 +34,57 @@ class CoffeeTable extends Component {
   createCoffeeLover(hbcUsers) {
     var userArray = this.state.hbcCoffeeLovers.slice();
     hbcUsers.users.forEach(element => {
-      userArray.push(element.name.first + " " + element.name.last);
+      var user = {
+        guid: element.guid,
+        name: element.name.first + " " + element.name.last,
+        location: element.location,
+        department: element.department,
+        motto: element.motto,
+        email: element.email,
+        phone: element.phone
+      };
+      userArray.push(user);
     });
     return userArray;
   }
 
   pairCoffeeLovers = () => {
     let coffeeLovers = this.state.hbcCoffeeLovers;
-    console.log(coffeeLovers);
-    var buddyOne;
-    var buddyTwo;
     var weeklyCoffeePair = this.state.weeklyCoffeBuddies.slice();
+
     while (coffeeLovers.length !== 0) {
-      buddyOne = coffeeLovers[Math.floor(Math.random() * coffeeLovers.length)];
-      coffeeLovers.splice(coffeeLovers.indexOf(buddyOne), 1);
-      buddyTwo = coffeeLovers[Math.floor(Math.random() * coffeeLovers.length)];
-      coffeeLovers.splice(coffeeLovers.indexOf(buddyTwo), 1);
-      weeklyCoffeePair.push(buddyOne + " -:- " + buddyTwo);
+      var randomPickOne = Math.floor(Math.random() * coffeeLovers.length);
+      var buddyOneName = coffeeLovers[randomPickOne].name;
+      var buddyOneEmail = coffeeLovers[randomPickOne].email;
+      var buddyOnePhone = coffeeLovers[randomPickOne].phone;
+      coffeeLovers.splice(randomPickOne, 1);
+
+      var randomPickTwo = Math.floor(Math.random() * coffeeLovers.length);
+      var buddyTwoName = coffeeLovers[randomPickTwo].name;
+      var buddyTwoEmail = coffeeLovers[randomPickTwo].email;
+      var buddyTwoPhone = coffeeLovers[randomPickTwo].phone;
+      coffeeLovers.splice(randomPickTwo, 1);
+
+      var coffeeLoversPair = {
+        buddyPair: {
+          buddyOne: {
+            name: buddyOneName,
+            email: buddyOneEmail,
+            phone: buddyOnePhone
+          },
+          buddyTwo: {
+            name: buddyTwoName,
+            email: buddyTwoEmail,
+            phone: buddyTwoPhone
+          }
+        }
+      };
+      weeklyCoffeePair.push(coffeeLoversPair);
     }
     this.setState({
       weeklyCoffeBuddies: weeklyCoffeePair
     });
   };
-
   render() {
     return (
       <div>
@@ -70,11 +97,30 @@ class CoffeeTable extends Component {
         </div>
         <div className="hbc-cafe">
           <div className="hbc-cafe-inner">
-            {this.state.weeklyCoffeBuddies.map(str => (
-              <ul>
-                <li key={str}>{str}</li>
-              </ul>
-            ))}
+            <ul>
+              {this.state.weeklyCoffeBuddies.map(str => (
+                <li key={str.buddyPair.buddyOne.name}>
+                  <div className="coffe-table">
+                    <div className="coffee-lover">
+                      {str.buddyPair.buddyOne.name}
+                      <span className="hide-on-mobile-view">
+                        {str.buddyPair.buddyOne.email}
+                        <br />
+                        {str.buddyPair.buddyOne.phone}
+                      </span>
+                    </div>
+                    <div className="coffee-lover">
+                      {str.buddyPair.buddyTwo.name}
+                      <span className="hide-on-mobile-view">
+                        {str.buddyPair.buddyTwo.email}
+                        <br />
+                        {str.buddyPair.buddyTwo.phone}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
         <div>
