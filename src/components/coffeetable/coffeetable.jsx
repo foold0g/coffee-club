@@ -21,8 +21,8 @@ class CoffeeTable extends Component {
   componentDidMount() {
     let url = `https://hbc-frontend-challenge.hbccommon.private.hbc.com/coffee-week/users`;
     Request.get(url).then(response => {
-      var hbcUsers = JSON.parse(response.text);
-      var userArray = this.getAllCoffeeLovers(hbcUsers);
+      let hbcUsers = JSON.parse(response.text);
+      let userArray = this.getAllCoffeeLovers(hbcUsers);
       this.setState({
         hbcCoffeeLovers: userArray
       });
@@ -30,10 +30,26 @@ class CoffeeTable extends Component {
     });
   }
 
+  checkPairAlreadyExists = (weeklyCoffeePair, giver, receiver) => {
+    let pairExists = false;
+    for (let i = 0; i < weeklyCoffeePair.length; i++) {
+      if (
+        (weeklyCoffeePair[i].giverName === giver &&
+          weeklyCoffeePair[i].receiverName === receiver) ||
+        (weeklyCoffeePair[i].giverName === receiver &&
+          weeklyCoffeePair[i].receiverName === giver)
+      ) {
+        pairExists = true;
+        break;
+      }
+    }
+    return pairExists;
+  };
+
   getAllCoffeeLovers(hbcUsers) {
-    var userArray = this.state.hbcCoffeeLovers.slice();
+    let userArray = this.state.hbcCoffeeLovers.slice();
     hbcUsers.users.forEach(element => {
-      var user = {
+      let user = {
         guid: element.guid,
         name: element.name.first + " " + element.name.last,
         location: element.location,
@@ -49,40 +65,69 @@ class CoffeeTable extends Component {
 
   pairCoffeeLovers = () => {
     let coffeeLovers = this.state.hbcCoffeeLovers;
-    var weeklyCoffeePair = this.state.weeklyCoffeBuddies.slice();
-
+    let weeklyCoffeePair = this.state.weeklyCoffeBuddies.slice();
+    let givers = [];
+    let receivers = [];
     while (coffeeLovers.length !== 0) {
-      var randomPickOne = Math.floor(Math.random() * coffeeLovers.length);
-      var buddyOneName = coffeeLovers[randomPickOne].name;
-      var buddyOneEmail = coffeeLovers[randomPickOne].email;
-      var buddyOnePhone = coffeeLovers[randomPickOne].phone;
+      let randomPickOne = Math.floor(Math.random() * coffeeLovers.length);
+      let buddyOneName = coffeeLovers[randomPickOne].name;
       coffeeLovers.splice(randomPickOne, 1);
 
-      var randomPickTwo = Math.floor(Math.random() * coffeeLovers.length);
-      var buddyTwoName = coffeeLovers[randomPickTwo].name;
-      var buddyTwoEmail = coffeeLovers[randomPickTwo].email;
-      var buddyTwoPhone = coffeeLovers[randomPickTwo].phone;
+      let randomPickTwo = Math.floor(Math.random() * coffeeLovers.length);
+      let buddyTwoName = coffeeLovers[randomPickTwo].name;
       coffeeLovers.splice(randomPickTwo, 1);
 
-      var coffeeLoversPair = {
+      givers.push(buddyOneName);
+      receivers.push(buddyTwoName);
+
+      let coffeeLoversPair = {
         buddyPair: {
           buddyOne: {
-            name: buddyOneName,
-            email: buddyOneEmail,
-            phone: buddyOnePhone
+            name: buddyOneName
           },
           buddyTwo: {
-            name: buddyTwoName,
-            email: buddyTwoEmail,
-            phone: buddyTwoPhone
+            name: buddyTwoName
           }
         }
       };
       weeklyCoffeePair.push(coffeeLoversPair);
     }
+
+    givers.forEach(receiver => {
+      let pairExists = false;
+      let assignSuccess = false;
+      while (receivers.lenth !== 0 && !assignSuccess) {
+        let giver = receivers[Math.floor(Math.random() * receivers.length)];
+        pairExists = this.checkPairAlreadyExists(
+          weeklyCoffeePair,
+          giver,
+          receiver
+        );
+        if (pairExists) {
+          receivers.splice(receivers.indexOf(giver), 1);
+          assignSuccess = false;
+        } else {
+          let pair = {
+            buddyPair: {
+              buddyOne: {
+                name: giver
+              },
+              buddyTwo: {
+                name: receiver
+              }
+            }
+          };
+          weeklyCoffeePair.push(pair);
+          receivers.splice(receivers.indexOf(giver), 1);
+          assignSuccess = true;
+        }
+      }
+    });
+
     this.setState({
       weeklyCoffeBuddies: weeklyCoffeePair
     });
+    console.log(weeklyCoffeePair);
   };
   render() {
     return (
@@ -105,19 +150,9 @@ class CoffeeTable extends Component {
                   <div className="coffe-table">
                     <div className="coffee-lover">
                       {str.buddyPair.buddyOne.name}
-                      <span className="hide-on-mobile-view">
-                        {str.buddyPair.buddyOne.email}
-                        <br />
-                        {str.buddyPair.buddyOne.phone}
-                      </span>
                     </div>
                     <div className="coffee-lover">
                       {str.buddyPair.buddyTwo.name}
-                      <span className="hide-on-mobile-view">
-                        {str.buddyPair.buddyTwo.email}
-                        <br />
-                        {str.buddyPair.buddyTwo.phone}
-                      </span>
                     </div>
                   </div>
                 </li>
